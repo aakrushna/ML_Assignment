@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import joblib
 
 # Load the dataset
 df = pd.read_csv("diabetes.csv")
@@ -54,3 +55,8 @@ plt.xlabel("Predicted")
 plt.ylabel("Actual")
 plt.title("Confusion Matrix")
 plt.show()
+
+# Save the trained model and scaler for use in the app
+joblib.dump(model, 'diabetes_model.joblib')
+joblib.dump(scaler, 'scaler.joblib')
+print("Model and scaler saved successfully.")

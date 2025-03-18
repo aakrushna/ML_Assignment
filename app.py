@@ -1,3 +1,18 @@
+import streamlit as st
+import numpy as np
+import pandas as pd
+import pickle
+import joblib
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+
+# Try to load the trained model and scaler
+try:
+    model = joblib.load('diabetes_model.joblib')
+    scaler = joblib.load('scaler.joblib')
+except Exception as e:
+    st.error(f"Error loading model or scaler: {e}. Please run assignment.py first to train the model.")
+
 # Streamlit app layout
 st.title("Disease Prediction App")
 
@@ -61,9 +76,14 @@ input_features = np.array([[
 
 # When the button is pressed, predict the result
 if st.button("Predict"):
-    prediction = model.predict(input_features)
-    
-    if prediction[0] == 1:
-        st.write("Prediction: Disease Present")
-    else:
-        st.write("Prediction: No Disease")
+    try:
+        # Scale the input features
+        scaled_features = scaler.transform(input_features)
+        prediction = model.predict(scaled_features)
+        
+        if prediction[0] == 1:
+            st.write("Prediction: Disease Present")
+        else:
+            st.write("Prediction: No Disease")
+    except Exception as e:
+        st.error(f"Error during prediction: {e}")
